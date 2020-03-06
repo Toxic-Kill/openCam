@@ -1,20 +1,33 @@
-﻿// openCam.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿#include <iostream>
+#include<opencv2/opencv.hpp>
 
-#include <iostream>
+using namespace std;
+using namespace cv;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	VideoCapture cap;//实例化一个VideoCapture类
+	cap.open(0);//打开摄像头
+	if (!cap.isOpened())//检查摄像头是否正常开启
+	{
+		std::cout << "无法正常打开摄像头" << std::endl;
+		return -1;
+	}
+	double fps = cap.get(CAP_PROP_FPS);//读取帧数
+	std::cout << "fps" << fps << std::endl;//显示帧数
+	while (1)//持续开启摄像头
+	{
+		cv::Mat frame;
+		bool rSuccess = cap.read(frame);//获得当前帧
+		if (!rSuccess)//检查当前帧是否正常获取
+		{
+			std::cout << "不能从视频中读取帧" << std::endl;
+			break;
+		}
+		else
+		{
+			cv::imshow("frame", frame);//显示当前帧
+		}
+		waitKey(30);
+	}
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
